@@ -1,0 +1,47 @@
+<pre>
+预测出现的问题：
+1、参数错误：openid、wxid、其他参数
+2、access_token错误 
+
+
+微信公众平台开发者文档
+模板消息接口：https://mp.weixin.qq.com/wiki/5/6dde9eaa909f83354e0094dc3ad99e05.html
+
+相关文件：
+    wx.fityun.cn/protected/controllers/MsgController.php
+    wx.fityun.cn/protected/extensions/utility/WeixinMsgHelper.php
+    菲特云/protected/extensions/utility/WxMsgHelper.php
+    微官网/protected/extensions/utility/WxMsgHelper.php
+	wx.fityu.cn/protected/components/Accesstoken.php
+
+相关表：wx_msg_template
+
+目前已经使用的模板情况：
+	登陆wechatpulbicnumber
+	微信消息使用场景：http://wx.fityun.net/wechatpulbicnumber/default/wxmsg_template_used
+	微信消息接口测试：http://wx.fityun.net/wechatpulbicnumber/default/wxmsg_testdemo
+
+
+步骤：
+1、添加某个公众号的模板消息
+   a. 公众号要先有模板ID
+   b. 把模板ID写入到wx_msg_template表
+
+2、用自己的openid,测试是否能发送成功
+   MsgController.php
+   WeixinMsgHelper.php
+   
+3、在菲特云/微官网中调用
+   微官网中的调用：
+     微信登陆：
+       //发送微信登陆消息
+       $this->wxmsg->login($wxid, $openid, $orgname, $customerInfo['realname'], time());
+
+     课程预约：
+       $wxMsgHelper->wxMsg('courseappoint', $orgInfo, $wx_appointInfo);
+
+   菲特云的调用：
+      会员充值： 
+	$wxMsgHelper->wxMsg('customercardrecharge', $orgInfo, $customerInfo);
+   
+</pre>

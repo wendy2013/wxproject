@@ -1,0 +1,81 @@
+<pre>
+容易出现的问题：
+1、参数错误：调整传入的参数
+2、需要参数openid
+3、签名错误：需要登录微信商户平台，设置密钥
+
+微信商户开发文档：https://pay.weixin.qq.com/wiki/doc/api/index.html
+公众号支付 —— https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=7_3
+
+相关文件：
+	微官网/protected/controller/payController.php
+	微官网/protected/views/pay/index.php
+	微官网/protected/extensions/weixinapi/*
+
+相关表：  
+	wx_config  wx_pay_config
+
+
+微信支付步骤：支付配置、下单、弹窗、支付回调
+
+1、支付配置
+   相关表：  wx_pay_config
+   图文说明：http://wx.fityun.cn/wechatpulbicnumber/default/wxpay_config【本地是最新的】
+    开通微信支付需要的步骤
+	前提：服务号
+	1、进入微信平台，申请开通微信支付，提交资料，等审核通过
+	2、会打一笔款到对公账号里面，验证一下【图2】
+	3、配置支付授权目录 http://weiguan.fityun.cn/pay/payweixin/【图3】
+	4、根据邮件里面的账号密码，登陆进去【图4】
+	5、进入商户登陆，下载证书
+	6、设置密钥，否则出现签名错误【图6】
+
+2、下单
+相关文件：微官网/protected/controller/payController.php
+此处是需要openid的，
+openid已经存在表中了，可以直接从表中获取;
+如果表中没有，需要通过跳转来获得openid。
+
+$tools = new JsApiPay();
+$openId = CustomerHelper::getUserOpenid();//此处是需要openid的
+$input = new WxPayUnifiedOrder();
+$input->SetBody($info);
+$input->SetAttach($info);
+$input->SetOut_trade_no($orderSn);   
+$input->SetTotal_fee($ammount * 100);
+$input->SetTime_start(date("YmdHis"));
+$input->SetTime_expire(date("YmdHis", time() + 600));
+$input->SetGoods_tag($good);
+$input->SetNotify_url($notify_url);
+$input->SetTrade_type("JSAPI");
+$input->SetOpenid($openId); 
+$order = WxPayApi::unifiedOrder($input);
+
+3、打开支付的弹窗
+相关文件：微官网/protected/views/pay/index.php
+WeixinJSBridge.invoke(
+    'getBrandWCPayRequest',
+    <?php echo $jsApiParameters; ?>,
+    function(res){
+        //WeixinJSBridge.log(res.err_msg);
+        //alert('desc:'+res.err_desc); 
+        //alert('err_msg:'+res.err_msg);
+        if(res.err_msg=="get_brand_wcpay_request:ok"){
+                location.href = order_list_url;
+        }
+    }
+);
+
+
+4、支付回调
+相关文件：
+      微官网/protected/controller/payController.php
+	  微官网/protected/extensions/weixinapi/*
+/**
+ * 微信支付，回调页面
+ */
+public function actionWxpaynotify() {
+	$notify = new NativeNotifyCallBack();
+	$notify->Handle(true);
+}
+</pre>

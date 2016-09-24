@@ -1,0 +1,37 @@
+﻿<pre>
+菜单配置
+消息与事件（包括添加自动回复、关键词回复、菜单事件、关注回复）    
+
+预测出现的问题：
+1、access_token过期：重新获取 
+
+微信公众平台开发者文档
+自定义菜单创建接口 —— https://mp.weixin.qq.com/wiki/10/0234e39a2025342c17a7d23595c6b40a.html
+接收事件推送     —— https://mp.weixin.qq.com/wiki/7/9f89d962eba4c5924ed95b513ba69d9b.html
+被动回复用户消息 —— https://mp.weixin.qq.com/wiki/1/6239b44c206cab9145b1d52c67e6c551.html
+
+相关文件：
+	wx.fityu.cn/protected/controllers/MenueController.php
+	wx.fityu.cn/protected/controllers/SiteConroller.php
+	wx.fityu.cn/protected/components/wechatCallbackapiTest.php
+	wx.fityu.cn/protected/components/Accesstoken.php
+
+微信配置表：wx_config
+菜单配置表：wx_menu_config
+消息与事件: wx_msg_event
+
+
+(开发者模式-基本配置)，修改并启用服务器配置
+    开发者模式URL：http://wx.fityun.cn/site?wxid={{WXID}}&orgid={{ORGID}}
+    开发者模式TOKEN：3-32字符，编写
+    开发者模式ASE KEY：64位字符，自动生成
+
+
+1、生成菜单 
+   wx.fityu.cn/menu/create?wxid={{XID}}
+
+2、消息/事件的回复 、
+   wx.fityu.cn/menu/create?wxid={{WXID}}&orgid={{ORGID}}
+
+
+</pre>

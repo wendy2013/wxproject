@@ -1,0 +1,57 @@
+﻿<pre>
+可能遇到的问题
+1、access_token过期，2小时有效，有自动生成；有时需要手动更新
+   参考Accesstoken.php
+
+
+微信公众平台开发者文档：
+网页授权获取用户基本信息 —— https://mp.weixin.qq.com/wiki/17/c0f37d5704f0b64713d5d2c37b468d75.html
+获取access token —— https://mp.weixin.qq.com/wiki/15/54ce45d8d30b6bf6758f68d2e95bc627.html
+获取用户基本信息 —— https://mp.weixin.qq.com/wiki/1/8a5ce6257f1d3b2afb20f83e72b72ce9.html
+
+相关文件：
+	weiguanwang/protected/controlers/AccountController.php
+	weiguanwang/protected/components/OrgHelper.php
+	wx.fityu.cn/protected/controlers/FitorgauthController.php
+	wx.fityu.cn/protected/components/Accesstoken.php
+
+相关表：
+    wx_config  org_customer  org_wxfans
+
+步骤：
+1、微信配置
+2、获取用户信息，如openid/unionid/昵称/头像
+3、根据openid判断org_customer/org_wxfans是否存在，设置session，跳转页面
+
+
+1、微信配置
+   相关表：wx_config
+   图文说明：http://wx.fityun.net/wechatpulbicnumber/default/wxmsg_config
+   
+2、获取用户信息，如openid/unionid/昵称/头像
+   相关文件：
+		weiguanwang/protected/controlers/AccountController.php
+		weiguanwang/protected/components/OrgHelper.php
+		wx.fityu.cn/protected/controlers/FitorgauthController.php
+
+   a.拼一个url并跳转，得到code
+   b.code+3个参数，获取access_token+openid
+   c.access_token+openid,  得到 nickname,headimg
+   d.拼一个url并跳转回微官网，如 http://weiguan.fityun.cn/account/wxbind?orgid=&openid=&nickname=&headimg=&sex=   
+
+3、根据openid判断org_customer/org_wxfans是否存在
+   相关文件：AccountController.php
+
+   e.根据openid 去org_customer表查询；不存在执行f; 存在执行j
+   f.根据openid 去org_wxfans表；不存在执行f; 存在执行g
+   g.插入wxfans表; 执行h
+   h.设置session,跳转粉丝页面 如果有卡，执行i
+   i.绑定卡，直接成为会员，删除org_wxfans记录，插入org_customer；执行j
+   j.设置session,跳转会员中心页面
+
+
+
+
+
+
+</pre>
